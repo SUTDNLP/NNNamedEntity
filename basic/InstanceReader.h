@@ -2,7 +2,7 @@
 #define _CONLL_READER_
 
 #include "Reader.h"
-#include "cml.h"
+#include "N3L.h"
 #include <sstream>
 
 using namespace std;
