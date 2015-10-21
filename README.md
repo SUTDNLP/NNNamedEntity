@@ -6,7 +6,7 @@ Demo system
 ======
 * Download [LibN3L](https://github.com/SUTDNLP/LibN3L) library and configure your system. Please refer to [Here](https://github.com/SUTDNLP/LibN3L)
 * Open [CMakeLists.txt](CMakeLists.txt) and change " /your_directory/LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L) package.
-* Run "sh demo-entity.sh".
+* Run "sh [demo-entity.sh](demo-entity.sh)".
 
 The demo system includes English name entity recognition sample data(["Entity.train"](example/Entity.train), ["Entity.dev"](example/Entity.dev) and ["Entity.test"](example/Entity.test)), English word embeding sample file(["sena.emb"](example/sena.emb)) and parameter setting file(["demo.option"](example/demo.option)). All of these files are gathered at folder [NNNamedEntity/example](example).
  
