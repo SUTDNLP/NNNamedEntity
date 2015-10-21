@@ -8,7 +8,7 @@ Demo system
 * Open [CMakeLists.txt](CMakeLists.txt) and change " /your_directory/LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L) package.
 * Run "sh demo-entity.sh".
 
-The demo system includes English name entity recognition sample data("Entity.train", "Entity.dev" and "Entity.test"), English word embeding sample file("sena.emb") and parameter setting file("demo.option"). All of these files are gathered at folder [NNNamedEntity/example](example).
+The demo system includes English name entity recognition sample data(["Entity.train"](example/Entity.train), ["Entity.dev"](example/Entity.dev) and ["Entity.test"](example/Entity.test)), English word embeding sample file(["sena.emb"](example/sena.emb)) and parameter setting file(["demo.option"](example/demo.option)). All of these files are gathered at folder [NNNamedEntity/example](example).
  
 This demo system runs a ***SparseTNNCRFMLLabeler*** model which means a traditional neural network with sparse feature and use CRF maximun likelihood as the objective function. 
 
