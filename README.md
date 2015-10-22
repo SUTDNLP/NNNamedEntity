@@ -37,8 +37,11 @@ Monitoring information
 During the running of this NER system, it may print out the follow log information:
 
 `Recall:	P=97/199=0.487437, Accuracy:	P=97/162=0.598765, Fmeasure:	0.537396`
+
 `test:`
+
 `Recall:	P=158/267=0.59176, Accuracy:	P=158/226=0.699115, Fmeasure:	0.640974`
+
 `Exceeds best previous performance of 0.523161. Saving model file..`
 
 The first "Recall..." line shows you the performance of the dev set and the second "Recall..." line shows 
