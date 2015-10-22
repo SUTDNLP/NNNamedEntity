@@ -16,9 +16,9 @@ The demo system will create two files: "Entity.devOUTdemo" and "Entity.testOUTde
 
 Feature format
 ======
-Consider following sentence:
+Consider following sentence in [Entity.test](example/Entity.test):
 
-`Foreign - invested enterprises have played a prominent role in improving China 's export commodity structure . ` in the [Entity.test](example/Entity.test). 
+`Foreign - invested enterprises have played a prominent role in improving China 's export commodity structure . ` . 
 
 The sample features for word `China` is 
 
@@ -44,5 +44,5 @@ During the running of this NER system, it may print out the follow log informati
 
 `Exceeds best previous performance of 0.523161. Saving model file..`
 
-The first "Recall..." line shows you the performance of the dev set and the second "Recall..." line shows 
+The first "Recall..." line shows the performance of the dev set and the second "Recall..." line shows 
 you the performance of the test set.
