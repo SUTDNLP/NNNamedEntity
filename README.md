@@ -5,7 +5,7 @@ NNNamedEntity is a package for Named Entity Recognition using neural networks ba
 Demo system
 ======
 * Download [LibN3L](https://github.com/SUTDNLP/LibN3L) library and configure your system. Please refer to [Here](https://github.com/SUTDNLP/LibN3L)
-* Open [CMakeLists.txt](CMakeLists.txt) and change " /your_directory/LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L) package.
+* Open [CMakeLists.txt](CMakeLists.txt) and change " ../LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L) package.
 * Run the [demo-entity.sh](demo-entity.sh) file: `sh demo-entity.sh`
 
 The demo system includes English name entity recognition sample data(["Entity.train"](example/Entity.train), ["Entity.dev"](example/Entity.dev) and ["Entity.test"](example/Entity.test), English word embeding sample file(["sena.emb"](example/sena.emb) and parameter setting file(["demo.option"](example/demo.option). All of these files are gathered at folder [NNNamedEntity/example](example).
@@ -18,7 +18,7 @@ Feature format
 ======
 Consider following sentence in [Entity.test](example/Entity.test):
 
-`Foreign - invested enterprises have played a prominent role in improving China 's export commodity structure . ` . 
+`Foreign - invested enterprises have played a prominent role in improving China 's export commodity structure . ` 
 
 The sample features for word `China` is 
 
