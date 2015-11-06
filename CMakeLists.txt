@@ -1,9 +1,12 @@
+cmake_minimum_required(VERSION 3.3)
+set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
 project(MinervaSegs)
 
 include_directories(
   basic
   /opt/mshadow/
-  /your_directory/LibN3L/
+  ../LibN3L/
 )
 
 add_definitions(-DUSE_CUDA=0)
