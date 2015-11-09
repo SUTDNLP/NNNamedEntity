@@ -169,7 +169,7 @@ public:
       //GRU
       Tensor<xpu, 2, dtype> inputcontext[seq_size][_inputwindow];
       Tensor<xpu, 2, dtype> inputcontextLoss[seq_size][_inputwindow];
-
+      
       Tensor<xpu, 2, dtype> inputcontext_reset_left[seq_size][_inputwindow];
       Tensor<xpu, 2, dtype> inputcontext_reset_right[seq_size][_inputwindow];
       Tensor<xpu, 2, dtype> inputcontext_current[seq_size][_inputwindow];
