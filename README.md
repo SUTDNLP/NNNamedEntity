@@ -14,6 +14,8 @@ This demo system runs a ***SparseTNNCRFMLLabeler*** model which means a traditio
 
 The demo system will create two files: "Entity.devOUTdemo" and "Entity.testOUTdemo" at [NNNamedEntity/example](example). These two files are the output tagged file for dev and test examples.
 
+Note: the example files are just to verify the running for the code. For copyright consideration, we take only hundreds of sentences as example. Hence the results on those example datasets does not represent the real performance on large dataset.
+
 Feature format
 ======
 Consider following sentence in [Entity.test](example/Entity.test):
