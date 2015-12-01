@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.3)
 set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
 set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
+
 project(MinervaSegs)
 
 include_directories(
   basic
   /opt/mshadow/
-  ../LibN3L/
+  /Users/Jie/Documents/Program/LibN3L
+  
 )
 
 add_definitions(-DUSE_CUDA=0)
@@ -16,6 +18,8 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 ELSE()
     SET( CMAKE_CXX_FLAGS  "-w -msse3 -funroll-loops -O3" )
 ENDIF()
+#set (CMAKE_CXX_FLAGS "-std=c++11 -g -O3 -DNDEBUG -DKENLM_MAX_ORDER=6")
+
 ####for   openblas
 add_definitions(-DMSHADOW_USE_CUDA=0)
 add_definitions(-DMSHADOW_USE_CBLAS=1)
@@ -36,9 +40,21 @@ SET( CMAKE_SHARED_LINKER_FLAGS  "-lm -lopenblas")
 #LINK_DIRECTORIES($(USE_CUDA_PATH)/lib64)
 ####endfor cuda
 
+#### for boost
+#find_package(Boost COMPONENTS serialization system REQUIRED)
+
+#include_directories(${Boost_INCLUDE_DIRS})
+#link_directories(${Boost_LIBRARY_DIRS})
+
+#SET( CMAKE_SHARED_LINKER_FLAGS  "-lm -lboost_serialization")
+#### end boost
+
+
 #add_subdirectory(basic)
 
 #aux_source_directory(. DIR_SRCS)
+
+
 
 
 add_executable(GatedLabeler GatedLabeler.cpp)
@@ -94,6 +110,10 @@ target_link_libraries(GRNNLabeler openblas)
 target_link_libraries(GRNNCRFMMLabeler openblas)
 target_link_libraries(GRNNCRFMLLabeler openblas)
 target_link_libraries(LSTMLabeler openblas)
+
+
+#target_link_libraries(LSTMCRFMLLabeler -lboost_serialization)
+#target_link_libraries(LSTMCRFMLLabeler ${Boost_LIBRARIES})
 target_link_libraries(LSTMCRFMLLabeler openblas)
 target_link_libraries(LSTMCRFMMLabeler openblas)
 target_link_libraries(SparseLabeler openblas)

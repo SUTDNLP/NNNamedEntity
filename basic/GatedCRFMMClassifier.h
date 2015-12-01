@@ -81,15 +81,20 @@ public:
     _wordDim = wordEmb.ncols();
     // tag variables
     _tagNum = tagEmbs.size();
-    _tagSize.resize(_tagNum);
-    _tagDim.resize(_tagNum);
-    _tags.resize(_tagNum);
-    for (int i = 0; i < _tagNum; i++){
-      _tagSize[i] = tagEmbs[i].nrows();
-      _tagDim[i] = tagEmbs[i].ncols();
-      _tags[i].initial(tagEmbs[i]);
+    if (_tagNum > 0) {
+      _tagSize.resize(_tagNum);
+      _tagDim.resize(_tagNum);
+      _tags.resize(_tagNum);
+      for (int i = 0; i < _tagNum; i++){
+        _tagSize[i] = tagEmbs[i].nrows();
+        _tagDim[i] = tagEmbs[i].ncols();
+        _tags[i].initial(tagEmbs[i]);
+      }
+      _tag_outputSize = _tagNum * _tagDim[0];
     }
-    _tag_outputSize = _tagNum * _tagDim[0];
+    else {
+      _tag_outputSize = 0;
+    }
 
     _charcontext = charcontext;
     _charwindow = 2 * _charcontext + 1;
@@ -216,11 +221,13 @@ public:
         }
 
         // tag prime init
-        tagprime[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
-        tagprimeLoss[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
-        tagprimeMask[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_one);
-        tagoutput[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
-        tagoutputLoss[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
+        if (_tagNum > 0) {
+          tagprime[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
+          tagprimeLoss[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
+          tagprimeMask[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_one);
+          tagoutput[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
+          tagoutputLoss[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
+        }
         
         wordprime[idx] = NewTensor<xpu>(Shape2(1, _wordDim), d_zero);
         wordprimeLoss[idx] = NewTensor<xpu>(Shape2(1, _wordDim), d_zero);
@@ -270,22 +277,30 @@ public:
         // char gated pooling
         _gatedchar_pooling.ComputeForwardScore(charhidden[idx], wordprime[idx], chargateweightMiddle[idx], chargateweight[idx], chargateweightsum[idx], chargatedpoolIndex[idx], chargatedpool[idx]);
         // tag prime get 
-        const vector<int>& tags = feature.tags;
-        for (int idy = 0; idy < _tagNum; idy++) {
-          _tags[idy].GetEmb(tags[idy], tagprime[idx][idy]);
+        if (_tagNum > 0) {
+          const vector<int>& tags = feature.tags;
+          for (int idy = 0; idy < _tagNum; idy++) {
+            _tags[idy].GetEmb(tags[idy], tagprime[idx][idy]);
+          }
+          // tag drop out
+          for (int idy = 0; idy < _tagNum; idy++) {
+            dropoutcol(tagprimeMask[idx][idy], _dropOut);
+            tagprime[idx][idy] = tagprime[idx][idy] * tagprimeMask[idx][idy];
+          }
+          concat(tagprime[idx], tagoutput[idx]);
         }
-        // tag drop out
-        for (int idy = 0; idy < _tagNum; idy++) {
-          dropoutcol(tagprimeMask[idx][idy], _dropOut);
-          tagprime[idx][idy] = tagprime[idx][idy] * tagprimeMask[idx][idy];
-        }
-        concat(tagprime[idx], tagoutput[idx]);
       }
       // concat tag input
-      for (int idx = 0; idx < seq_size; idx++) {
-        concat(wordprime[idx], chargatedpool[idx], tagoutput[idx], wordrepresent[idx]);
+      if (_tagNum > 0) {
+        for (int idx = 0; idx < seq_size; idx++) {
+          concat(wordprime[idx], chargatedpool[idx], tagoutput[idx], wordrepresent[idx]);
+        }
       }
-
+      else {
+        for (int idx = 0; idx < seq_size; idx++) {
+          concat(wordprime[idx], chargatedpool[idx], wordrepresent[idx]);
+        }        
+      }
       for (int idx = 0; idx < seq_size; idx++) {
         for (int i = -_wordcontext; i <= _wordcontext; i++) {
           if (idx + i >= 0 && idx + i < seq_size)
@@ -379,10 +394,17 @@ public:
       }
 
       // decompose loss with tagoutputLoss
-      for (int idx = 0; idx < seq_size; idx++) {
-        unconcat(wordprimeLoss[idx], chargatedpoolLoss[idx], tagoutputLoss[idx], wordrepresentLoss[idx]);
-        // tag prime loss
-        unconcat(tagprimeLoss[idx], tagoutputLoss[idx]);
+      if (_tagNum > 0) {
+        for (int idx = 0; idx < seq_size; idx++) {
+          unconcat(wordprimeLoss[idx], chargatedpoolLoss[idx], tagoutputLoss[idx], wordrepresentLoss[idx]);
+          // tag prime loss
+          unconcat(tagprimeLoss[idx], tagoutputLoss[idx]);
+        }
+      }
+      else {
+        for (int idx = 0; idx < seq_size; idx++) {
+          unconcat(wordprimeLoss[idx], chargatedpoolLoss[idx], wordrepresentLoss[idx]);
+        }        
       }
 
       for (int idx = 0; idx < seq_size; idx++) {
@@ -406,13 +428,15 @@ public:
         }
       }
       //tag fine tune
-      for (int idy = 0; idy < _tagNum; idy++){
-        if (_tags[idy].bEmbFineTune()) {
-          for (int idx = 0; idx < seq_size; idx++) {
-            const Feature& feature = example.m_features[idx];
-            const vector<int>& tags = feature.tags;
-            tagprimeLoss[idx][idy] = tagprimeLoss[idx][idy] * tagprimeMask[idx][idy];
-            _tags[idy].EmbLoss(tags[idy], tagprimeLoss[idx][idy]);
+      if (_tagNum > 0) {
+        for (int idy = 0; idy < _tagNum; idy++){
+          if (_tags[idy].bEmbFineTune()) {
+            for (int idx = 0; idx < seq_size; idx++) {
+              const Feature& feature = example.m_features[idx];
+              const vector<int>& tags = feature.tags;
+              tagprimeLoss[idx][idy] = tagprimeLoss[idx][idy] * tagprimeMask[idx][idy];
+              _tags[idy].EmbLoss(tags[idy], tagprimeLoss[idx][idy]);
+            }
           }
         }
       }
@@ -460,11 +484,13 @@ public:
         FreeSpace(&(chargatedpoolLoss[idx]));
 
         // tag freespace
-        FreeSpace(&(tagprime[idx]));
-        FreeSpace(&(tagprimeLoss[idx]));
-        FreeSpace(&(tagprimeMask[idx]));
-        FreeSpace(&(tagoutput[idx]));
-        FreeSpace(&(tagoutputLoss[idx]));
+        if (_tagNum > 0) {
+          FreeSpace(&(tagprime[idx]));
+          FreeSpace(&(tagprimeLoss[idx]));
+          FreeSpace(&(tagprimeMask[idx]));
+          FreeSpace(&(tagoutput[idx]));
+          FreeSpace(&(tagoutputLoss[idx]));
+        }
 
         FreeSpace(&(wordprime[idx]));
         FreeSpace(&(wordprimeLoss[idx]));
@@ -547,8 +573,10 @@ public:
         inputcontext_gate_current[idx][idy] = NewTensor<xpu>(Shape2(1, _token_representation_size), d_zero);
       }
 
-      tagprime[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
-      tagoutput[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
+      if (_tagNum > 0) {
+        tagprime[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
+        tagoutput[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
+      }
 
       wordprime[idx] = NewTensor<xpu>(Shape2(1, _wordDim), d_zero);
       wordrepresent[idx] = NewTensor<xpu>(Shape2(1, _token_representation_size), d_zero);
@@ -583,15 +611,24 @@ public:
       // char gated pooling
       _gatedchar_pooling.ComputeForwardScore(charhidden[idx], wordprime[idx], chargateweightMiddle[idx], chargateweight[idx], chargateweightsum[idx], chargatedpoolIndex[idx], chargatedpool[idx]);
       // tag prime get
-      const vector<int>& tags = feature.tags;
-      for (int idy = 0; idy < _tagNum; idy++){
-        _tags[idy].GetEmb(tags[idy], tagprime[idx][idy]);
-      }
-      concat(tagprime[idx], tagoutput[idx]);  
+      if (_tagNum > 0) {
+        const vector<int>& tags = feature.tags;
+        for (int idy = 0; idy < _tagNum; idy++){
+          _tags[idy].GetEmb(tags[idy], tagprime[idx][idy]);
+        }
+        concat(tagprime[idx], tagoutput[idx]);  
+      }  
     }
 
-    for (int idx = 0; idx < seq_size; idx++) {
-      concat(wordprime[idx], chargatedpool[idx], tagoutput[idx], wordrepresent[idx]);
+    if (_tagNum > 0) {
+      for (int idx = 0; idx < seq_size; idx++) {
+        concat(wordprime[idx], chargatedpool[idx], tagoutput[idx], wordrepresent[idx]);
+      }
+    }
+    else {
+      for (int idx = 0; idx < seq_size; idx++) {
+        concat(wordprime[idx], chargatedpool[idx], wordrepresent[idx]);
+      }      
     }
 
     for (int idx = 0; idx < seq_size; idx++) {
@@ -661,8 +698,10 @@ public:
       FreeSpace(&(chargateweightMiddle[idx]));
       FreeSpace(&(chargateweight[idx]));
       FreeSpace(&(chargateweightsum[idx]));
-      FreeSpace(&(tagprime[idx]));
-      FreeSpace(&(tagoutput[idx]));
+      if (_tagNum > 0) {
+        FreeSpace(&(tagprime[idx]));
+        FreeSpace(&(tagoutput[idx]));
+      }
       FreeSpace(&(wordprime[idx]));
       FreeSpace(&(wordrepresent[idx]));
       FreeSpace(&(input[idx]));
@@ -731,8 +770,10 @@ public:
         inputcontext_gate_current[idx][idy] = NewTensor<xpu>(Shape2(1, _token_representation_size), d_zero);
       }
 
-      tagprime[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
-      tagoutput[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
+      if (_tagNum > 0) {
+        tagprime[idx] = NewTensor<xpu>(Shape3(_tagNum, 1, _tagDim[0]), d_zero);
+        tagoutput[idx] = NewTensor<xpu>(Shape2(1, _tag_outputSize), d_zero);
+      }
 
       wordprime[idx] = NewTensor<xpu>(Shape2(1, _wordDim), d_zero);
       wordrepresent[idx] = NewTensor<xpu>(Shape2(1, _token_representation_size), d_zero);
@@ -767,15 +808,24 @@ public:
       // char gated pooling
       _gatedchar_pooling.ComputeForwardScore(charhidden[idx], wordprime[idx], chargateweightMiddle[idx], chargateweight[idx], chargateweightsum[idx], chargatedpoolIndex[idx], chargatedpool[idx]);
       // tag prime get
-      const vector<int>& tags = feature.tags;
-      for (int idy = 0; idy < _tagNum; idy++){
-        _tags[idy].GetEmb(tags[idy], tagprime[idx][idy]);
-      }
-      concat(tagprime[idx], tagoutput[idx]);  
+      if (_tagNum > 0) {
+        const vector<int>& tags = feature.tags;
+        for (int idy = 0; idy < _tagNum; idy++){
+          _tags[idy].GetEmb(tags[idy], tagprime[idx][idy]);
+        }
+        concat(tagprime[idx], tagoutput[idx]);  
+      }  
     }
 
-    for (int idx = 0; idx < seq_size; idx++) {
-      concat(wordprime[idx], chargatedpool[idx], tagoutput[idx], wordrepresent[idx]);
+    if (_tagNum > 0) {
+      for (int idx = 0; idx < seq_size; idx++) {
+        concat(wordprime[idx], chargatedpool[idx], tagoutput[idx], wordrepresent[idx]);
+      }
+    }
+    else {
+      for (int idx = 0; idx < seq_size; idx++) {
+        concat(wordprime[idx], chargatedpool[idx], wordrepresent[idx]);
+      }      
     }
 
     for (int idx = 0; idx < seq_size; idx++) {
@@ -845,8 +895,10 @@ public:
       FreeSpace(&(chargateweightMiddle[idx]));
       FreeSpace(&(chargateweight[idx]));
       FreeSpace(&(chargateweightsum[idx]));
-      FreeSpace(&(tagprime[idx]));
-      FreeSpace(&(tagoutput[idx]));
+      if (_tagNum > 0) {
+        FreeSpace(&(tagprime[idx]));
+        FreeSpace(&(tagoutput[idx]));
+      }
       FreeSpace(&(wordprime[idx]));
       FreeSpace(&(wordrepresent[idx]));
       FreeSpace(&(input[idx]));
