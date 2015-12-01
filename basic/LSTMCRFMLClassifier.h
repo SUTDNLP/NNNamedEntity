@@ -832,44 +832,6 @@ public:
   }
 
   void writeModel(const string &outputModelFile) {
-    LStream outf(outputModelFile, "w+");
-    // outf.open(outputModelFile.c_str(), ios_base::app);
-    // boost::archive::text_oarchive oa(outf);
-    // oa << _wordSize;
-    // outf << "##BEGIN_PARAMETERS:" << std::endl;
-    // outf << "#BEGIN_CURRENTMODEL_PARAMETERS:" << std::endl;
-    // outf << "_tagNum " << _tagNum << std::endl;
-    // outf << "_tag_outputSize " << _tag_outputSize << std::endl;
-    // for (int idx = 0; idx < _tagSize.size(); idx++) {
-    //   outf << "_tagSize" << idx << " " << _tagSize[idx] << std::endl;
-    // }
-    // for (int idx = 0; idx < _tagDim.size(); idx++) {
-    //   outf << "_tagDim" << idx << " " << _tagDim[idx] << std::endl;
-    // }
-    // outf << "_wordcontext " << _wordcontext << std::endl;
-    // outf << "_wordwindow " << _wordwindow << std::endl;
-    // outf << "_wordSize " << _wordSize << std::endl;
-    // outf << "_wordDim " << _wordDim << std::endl;
-    // outf << "_charcontext " << _charcontext << std::endl;
-    // outf << "_charwindow " << _charwindow << std::endl;
-    // outf << "_charSize " << _charSize << std::endl;
-    // outf << "_charDim " << _charDim << std::endl;
-    // outf << "_char_outputSize " << _char_outputSize << std::endl;
-    // outf << "_char_inputSize " << _char_inputSize << std::endl;
-    // outf << "_lstmhiddensize " << _lstmhiddensize << std::endl;
-    // outf << "_hiddensize " << _hiddensize << std::endl;
-    // outf << "_inputsize " << _inputsize << std::endl;
-    // outf << "_token_representation_size " << _token_representation_size << std::endl;
-    // outf << "_labelSize " << _labelSize << std::endl;
-    // outf << "#END_CURRENTMODEL_PARAMETERS!" << std::endl;
-    // outf << "#BEGIN_LOOKUPTABLE_PARAMETERS:" << std::endl;
-    _words.writeModel(outf);
-    _chars.writeModel(outf);
-    // outf << "#END_LOOKUPTABLE_PARAMETERS!" << std::endl;
-
-    // outf << "##END_PARAMETERS!" << std::endl;
-
-
 
   }
 

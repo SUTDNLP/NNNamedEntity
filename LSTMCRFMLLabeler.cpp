@@ -755,7 +755,6 @@ void Labeler::readWordEmbeddings(const string& inFile, NRMat<dtype>& wordEmb) {
 
 void Labeler::loadModelFile(const string& inputModelFile) {
   std::cout << "Start load model from file: " << inputModelFile << std::endl;
-
   LStream inf(inputModelFile, "rb");
   m_options.loadModel(inf);
   m_options.showOptions();
@@ -776,8 +775,6 @@ void Labeler::loadModelFile(const string& inputModelFile) {
   ReadString(inf, unknownkey);
   ReadString(inf, seperateKey);
   std::cout << "Model has been loaded from file: " << inputModelFile << std::endl;
-
-
 }
 
 void Labeler::writeModelFile(const string & outputModelFile) {
@@ -799,9 +796,7 @@ void Labeler::writeModelFile(const string & outputModelFile) {
   WriteString(outf, nullkey);
   WriteString(outf, unknownkey);
   WriteString(outf, seperateKey);
-
   std::cout << "Model has been written in file: " << outputModelFile << std::endl;
-
 }
 
 

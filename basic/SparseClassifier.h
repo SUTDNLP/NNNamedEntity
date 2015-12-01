@@ -165,9 +165,26 @@ public:
     _layer_linear.updateAdaGrad(nnRegular, adaAlpha, adaEps);
   }
 
-  void writeModel();
+  void writeModel(LStream &outf) {
+    WriteBinary(outf, _labelSize);
+    WriteBinary(outf, _linearfeatSize);
 
-  void loadModel();
+    WriteBinary(outf, _dropOut);
+    _eval.writeModel(outf);
+
+    _layer_linear.writeModel(outf);
+
+  }
+
+  void loadModel(LStream &inf) {
+    ReadBinary(inf, _labelSize);
+    ReadBinary(inf, _linearfeatSize);
+
+    ReadBinary(inf, _dropOut);
+    _eval.loadModel(inf);
+
+    _layer_linear.loadModel(inf);
+  }
 
   void checkgrad(const vector<Example>& examples, Tensor<xpu, 2, dtype> Wd, Tensor<xpu, 2, dtype> gradWd, const string& mark, int iter) {
     int charseed = mark.length();

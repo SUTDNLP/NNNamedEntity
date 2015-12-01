@@ -790,9 +790,94 @@ public:
     
   }
 
-  void writeModel();
+  void writeModel(LStream &outf) {
+    _words.writeModel(outf);
+    _chars.writeModel(outf);
 
-  void loadModel();
+    WriteBinary(outf, _tagNum);
+    if (_tagNum > 0) {
+      WriteBinary(outf, _tag_outputSize);
+      WriteVector(outf, _tagSize);
+      WriteVector(outf, _tagDim);
+      for (int idx = 0; idx < _tagNum; idx++) {
+        _tags[idx].writeModel(outf);
+      }
+    }
+
+    WriteBinary(outf, _wordcontext);
+    WriteBinary(outf, _wordwindow);
+    WriteBinary(outf, _wordSize);
+    WriteBinary(outf, _wordDim);
+
+    WriteBinary(outf, _charcontext);
+    WriteBinary(outf, _charwindow);
+    WriteBinary(outf, _charSize);
+    WriteBinary(outf, _charDim);
+    WriteBinary(outf, _char_outputSize);
+    WriteBinary(outf, _char_inputSize);
+
+    WriteBinary(outf, _grnnhiddensize);
+    WriteBinary(outf, _hiddensize);
+    WriteBinary(outf, _inputsize);
+    WriteBinary(outf, _token_representation_size);
+
+
+    _olayer_linear.writeModel(outf);
+    _tanh_project.writeModel(outf);
+    _tanhchar_project.writeModel(outf);
+    _gatedchar_pooling.writeModel(outf);
+    rnn_left_project.writeModel(outf);
+    rnn_right_project.writeModel(outf);
+
+    WriteBinary(outf, _labelSize);
+    _eval.writeModel(outf);
+    WriteBinary(outf, _dropOut);
+
+  }
+
+  void loadModel(LStream &inf) {
+    _words.loadModel(inf);
+    _chars.loadModel(inf);
+
+    ReadBinary(inf, _tagNum);
+    if (_tagNum > 0) {
+      ReadBinary(inf, _tag_outputSize);
+      _tags.resize(_tagNum); 
+      ReadVector(inf, _tagSize);
+      ReadVector(inf, _tagDim);
+      for (int idx = 0; idx < _tagNum; idx++) {
+        _tags[idx].loadModel(inf);
+      }
+    }
+
+    ReadBinary(inf, _wordcontext);
+    ReadBinary(inf, _wordwindow);
+    ReadBinary(inf, _wordSize);
+    ReadBinary(inf, _wordDim);
+
+    ReadBinary(inf, _charcontext);
+    ReadBinary(inf, _charwindow);
+    ReadBinary(inf, _charSize);
+    ReadBinary(inf, _charDim);
+    ReadBinary(inf, _char_outputSize);
+    ReadBinary(inf, _char_inputSize);
+
+    ReadBinary(inf, _grnnhiddensize);
+    ReadBinary(inf, _hiddensize);
+    ReadBinary(inf, _inputsize);
+    ReadBinary(inf, _token_representation_size);
+
+    _olayer_linear.loadModel(inf);
+    _tanh_project.loadModel(inf);
+    _tanhchar_project.loadModel(inf);
+    _gatedchar_pooling.loadModel(inf);
+    rnn_left_project.loadModel(inf);
+    rnn_right_project.loadModel(inf);
+
+    ReadBinary(inf, _labelSize);
+    _eval.loadModel(inf);
+    ReadBinary(inf, _dropOut);
+  }
 
   void checkgrad(const vector<Example>& examples, Tensor<xpu, 2, dtype> Wd, Tensor<xpu, 2, dtype> gradWd, const string& mark, int iter) {
     int charseed = mark.length();
