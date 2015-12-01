@@ -4,7 +4,7 @@ NNNamedEntity is a package for Named Entity Recognition using neural networks ba
 
 Demo system
 ======
-* Download the [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie) library(dev-jie branch) and configure your system. Please refer to [Here](https://github.com/SUTDNLP/LibN3L/tree/dev-jie)
+* Download the [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie) library(***dev-jie branch***) and configure your system. Please refer to [Here](https://github.com/SUTDNLP/LibN3L/tree/dev-jie)
 * Open [CMakeLists.txt](CMakeLists.txt) and change " ../LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie) package.
 * Run the [demo-entity.sh](demo-entity.sh) file: `sh demo-entity.sh`
 
@@ -12,11 +12,11 @@ The demo system includes English name entity recognition sample data(["Entity.tr
  
 This demo system runs a ***SparseTNNCRFMLLabeler*** model which means a traditional neural network with sparse feature and use CRF maximun likelihood as the objective function. 
 
-The demo system will generate three files: "Entity.devOUTdemo", "demo.model" and "Entity.test.output" at [NNNamedEntity/example](example). "Entity.devOUTdemo" is the tagged dev file during training process. "demo.model" is the best predict model in all training process. "Entity.test.output" is the final tagged result for ["Entity.test"](example/Entity.test) in prediction process based on the generated model "demo.model".
+The demo system will generate three files: "Entity.devOUTdemo", "demo.model" and "Entity.test.output" at [NNNamedEntity/example](example). "Entity.devOUTdemo" is the tagged dev file during training process. "demo.model" is the best predicting model in all training process. "Entity.test.output" is the final tagged result for ["Entity.test"](example/Entity.test) in tagger process based on the generated model "demo.model".
 
 Note: 
 ======
-* Current version only compatible with the dev-jie branch of [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie), which contains the model saving and loading module.
+* Current version only compatible with the ***dev-jie branch*** of [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie), which contains the model saving and loading module.
 * The example files are just to verify the running for the code. For copyright consideration, we take only hundreds of sentences as example. Hence the results on those example datasets does not represent the real performance on large dataset.
 * The .cpp file also provide gradient checking for verify your code, it is commentted out by defult. It is necessary to set "dropout = 0" in [demo.option](example/demo.option) before you enable the gradient checking.
 
