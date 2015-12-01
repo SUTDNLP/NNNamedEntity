@@ -7,7 +7,7 @@ project(MinervaSegs)
 include_directories(
   basic
   /opt/mshadow/
-  /Users/Jie/Documents/Program/LibN3L
+  ../LibN3L
   
 )
 

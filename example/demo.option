@@ -13,6 +13,6 @@ wordEmbSize = 50
 wordEmbFineTune = true
 charEmbFineTune = true
 outBest = OUTdemo
-maxIter = 3
+maxIter = 10
 atomLayers = 3
 seg = true
