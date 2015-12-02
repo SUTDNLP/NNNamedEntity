@@ -200,14 +200,62 @@ public:
     std::cout << "saveItermediate = " << saveIntermediate << std::endl;
     std::cout << "train = " << train << std::endl;
     std::cout << "maxInstance = " << maxInstance << std::endl;
+
     for (int idx = 0; idx < testFiles.size(); idx++) {
       std::cout << "testFile = " << testFiles[idx] << std::endl;
-    }
+    }      
+
     std::cout << "outBest = " << outBest << std::endl;
     std::cout << "relu = " << relu << std::endl;
     std::cout << "seg = " << seg << std::endl;
     std::cout << "atomLayers = " << atomLayers << std::endl;
     std::cout << "rnnLayers = " << rnnLayers << std::endl;
+  }
+
+  void writeOption(const string& outputModelFile) {
+    ofstream outf;
+    outf.open(outputModelFile.c_str());
+    outf << "BEGIN_OPTION:" << std::endl;
+    outf << "wordCutOff = " << wordCutOff << std::endl;
+    outf << "featCutOff = " << featCutOff << std::endl;
+    outf << "charCutOff = " << charCutOff << std::endl;
+    outf << "tagCutOff = " << tagCutOff << std::endl;
+    outf << "initRange = " << initRange << std::endl;
+    outf << "maxIter = " << maxIter << std::endl;
+    outf << "batchSize = " << batchSize << std::endl;
+    outf << "adaEps = " << adaEps << std::endl;
+    outf << "adaAlpha = " << adaAlpha << std::endl;
+    outf << "regParameter = " << regParameter << std::endl;
+    outf << "dropProb = " << dropProb << std::endl;
+
+    outf << "linearHiddenSize = " << linearHiddenSize << std::endl;
+    outf << "hiddenSize = " << hiddenSize << std::endl;
+    outf << "rnnHiddenSize = " << rnnHiddenSize << std::endl;
+    outf << "wordEmbSize = " << wordEmbSize << std::endl;
+    outf << "wordcontext = " << wordcontext << std::endl;
+    outf << "wordEmbFineTune = " << wordEmbFineTune << std::endl;
+    outf << "tagEmbSize = " << tagEmbSize << std::endl;
+    outf << "tagEmbFineTune = " << tagEmbFineTune << std::endl;
+    outf << "charEmbSize = " << charEmbSize << std::endl;
+    outf << "charcontext = " << charcontext << std::endl;
+    outf << "charEmbFineTune = " << charEmbFineTune << std::endl;
+    outf << "charhiddenSize = " << charhiddenSize << std::endl;
+
+    outf << "verboseIter = " << verboseIter << std::endl;
+    outf << "saveItermediate = " << saveIntermediate << std::endl;
+    outf << "train = " << train << std::endl;
+    outf << "maxInstance = " << maxInstance << std::endl;
+    for (int idx = 0; idx < testFiles.size(); idx++) {
+      outf << "testFile = " << testFiles[idx] << std::endl;
+    }
+    outf << "outBest = " << outBest << std::endl;
+    outf << "relu = " << relu << std::endl;
+    outf << "seg = " << seg << std::endl;
+    outf << "atomLayers = " << atomLayers << std::endl;
+    outf << "rnnLayers = " << rnnLayers << std::endl; 
+    outf << "END_OPTION!" << std::endl;  
+    outf << std::endl; 
+    outf.close();
   }
 
   void load(const std::string& infile) {
@@ -219,6 +267,10 @@ public:
       if (!my_getline(inf, strLine)) {
         break;
       }
+      if (strLine == "END_OPTION!") {
+        cout << "Finished loading option file!" << endl;
+        break;
+      }
       if (strLine.empty())
         continue;
       vecLine.push_back(strLine);
@@ -226,6 +278,86 @@ public:
     inf.close();
     setOptions(vecLine);
   }
+
+
+  void writeModel(LStream &outf) {
+
+
+    WriteVector(outf, testFiles);
+    WriteString(outf, outBest);
+
+    WriteBinary(outf, wordCutOff);
+    WriteBinary(outf, featCutOff);
+    WriteBinary(outf, charCutOff);
+    WriteBinary(outf, tagCutOff);
+    WriteBinary(outf, initRange);
+    WriteBinary(outf, maxIter);
+    WriteBinary(outf, batchSize);
+    WriteBinary(outf, adaEps);
+    WriteBinary(outf, adaAlpha);
+    WriteBinary(outf, regParameter);
+    WriteBinary(outf, dropProb);
+    WriteBinary(outf, linearHiddenSize);
+    WriteBinary(outf, hiddenSize);
+    WriteBinary(outf, rnnHiddenSize);
+    WriteBinary(outf, wordEmbSize);
+    WriteBinary(outf, wordcontext);
+    WriteBinary(outf, wordEmbFineTune);
+    WriteBinary(outf, tagEmbSize);
+    WriteBinary(outf, tagEmbFineTune);
+    WriteBinary(outf, charEmbSize);
+    WriteBinary(outf, charcontext);
+    WriteBinary(outf, charEmbFineTune);
+    WriteBinary(outf, charhiddenSize);
+    WriteBinary(outf, verboseIter);
+    WriteBinary(outf, saveIntermediate);
+    WriteBinary(outf, train);
+    WriteBinary(outf, maxInstance);
+    WriteBinary(outf, seg);
+    WriteBinary(outf, relu);
+    WriteBinary(outf, atomLayers);
+    WriteBinary(outf, rnnLayers);
+
+  }
+
+  void loadModel(LStream &inf) {
+    ReadVector(inf, testFiles);
+    ReadString(inf, outBest);
+
+    ReadBinary(inf, wordCutOff);
+    ReadBinary(inf, featCutOff);
+    ReadBinary(inf, charCutOff);
+    ReadBinary(inf, tagCutOff);
+    ReadBinary(inf, initRange);
+    ReadBinary(inf, maxIter);
+    ReadBinary(inf, batchSize);
+    ReadBinary(inf, adaEps);
+    ReadBinary(inf, adaAlpha);
+    ReadBinary(inf, regParameter);
+    ReadBinary(inf, dropProb);
+    ReadBinary(inf, linearHiddenSize);
+    ReadBinary(inf, hiddenSize);
+    ReadBinary(inf, rnnHiddenSize);
+    ReadBinary(inf, wordEmbSize);
+    ReadBinary(inf, wordcontext);
+    ReadBinary(inf, wordEmbFineTune);
+    ReadBinary(inf, tagEmbSize);
+    ReadBinary(inf, tagEmbFineTune);
+    ReadBinary(inf, charEmbSize);
+    ReadBinary(inf, charcontext);
+    ReadBinary(inf, charEmbFineTune);
+    ReadBinary(inf, charhiddenSize);
+    ReadBinary(inf, verboseIter);
+    ReadBinary(inf, saveIntermediate);
+    ReadBinary(inf, train);
+    ReadBinary(inf, maxInstance);
+    ReadBinary(inf, seg);
+    ReadBinary(inf, relu);
+    ReadBinary(inf, atomLayers);
+    ReadBinary(inf, rnnLayers);
+  }
+
+
 };
 
 #endif
