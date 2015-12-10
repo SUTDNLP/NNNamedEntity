@@ -4,8 +4,8 @@ NNNamedEntity is a package for Named Entity Recognition using neural networks ba
 
 Demo system
 ======
-* Download the [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie) library(***dev-jie branch***) and configure your system. Please refer to [Here](https://github.com/SUTDNLP/LibN3L/tree/dev-jie)
-* Open [CMakeLists.txt](CMakeLists.txt) and change " ../LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie) package.
+* Download the [LibN3L](https://github.com/SUTDNLP/LibN3L) library and configure your system. Please refer to [Here](https://github.com/SUTDNLP/LibN3L)
+* Open [CMakeLists.txt](CMakeLists.txt) and change " ../LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L) package.
 * Run the [demo-entity.sh](demo-entity.sh) file: `sh demo-entity.sh`
 
 The demo system includes English name entity recognition sample data(["Entity.train"](example/Entity.train), ["Entity.dev"](example/Entity.dev) and ["Entity.test"](example/Entity.test), English word embeding sample file(["sena.emb"](example/sena.emb) and parameter setting file(["demo.option"](example/demo.option). All of these files are gathered at folder [NNNamedEntity/example](example).
@@ -16,7 +16,7 @@ The demo system will generate three files: "Entity.devOUTdemo", "demo.model" and
 
 Note: 
 ======
-* Current version only compatible with the ***dev-jie branch*** of [LibN3L](https://github.com/SUTDNLP/LibN3L/tree/dev-jie), which contains the model saving and loading module.
+* Current version only compatible with [LibN3L](https://github.com/SUTDNLP/LibN3L) after Dec. 10th 2015 , which contains the model saving and loading module.
 * The example files are just to verify the running for the code. For copyright consideration, we take only hundreds of sentences as example. Hence the results on those example datasets does not represent the real performance on large dataset.
 * The .cpp file also provide gradient checking for verify your code, it is commentted out by defult. It is necessary to set "dropout = 0" in [demo.option](example/demo.option) before you enable the gradient checking.
 
