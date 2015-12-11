@@ -59,4 +59,4 @@ you the performance of the test set.
 Updating...
 ====
 * 2015-12-02: support model saving and loading.
-* 2015-12-11: fix test() output file bug. Previous version's output file are golden test file, this version make the output to be the predicted file.
+* 2015-12-11: fix test() output file bug. Previous version's output is golden test file, this version sets the output to be the predicted file.
