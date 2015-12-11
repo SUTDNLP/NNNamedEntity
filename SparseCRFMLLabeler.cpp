@@ -641,7 +641,10 @@ void Labeler::test(const string& testFile, const string& outputFile, const strin
     }
     Instance curResultInst;
     curResultInst.copyValuesFrom(testInsts[idx]);
+    curResultInst.assignLabel(result_labels);
     testInstResults.push_back(curResultInst);
+    // curResultInst.copyValuesFrom(testInsts[idx]);
+    // testInstResults.push_back(curResultInst);
   }
   std::cout << "test:" << std::endl;
   metric_test.print();

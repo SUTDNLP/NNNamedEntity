@@ -638,6 +638,7 @@ void Labeler::test(const string& testFile, const string& outputFile, const strin
     }
     Instance curResultInst;
     curResultInst.copyValuesFrom(testInsts[idx]);
+    curResultInst.assignLabel(result_labels);
     testInstResults.push_back(curResultInst);
   }
   std::cout << "test:" << std::endl;
@@ -840,5 +841,6 @@ int main(int argc, char* argv[]) {
 #else
   ShutdownTensorEngine<cpu>();
 #endif
+
 }
 
