@@ -16,11 +16,9 @@ The demo system will generate three files: "Entity.devOUTdemo", "demo.model" and
 
 Note: 
 ======
-* Current version only compatible with [LibN3L](https://github.com/SUTDNLP/LibN3L) after Dec. 10th 2015 , which contains the model saving and loading module.
+* Current version only compatible with [LibN3L](https://github.com/SUTDNLP/LibN3L) after ***Dec. 10th 2015*** , which contains the model saving and loading module.
 * The example files are just to verify the running for the code. For copyright consideration, we take only hundreds of sentences as example. Hence the results on those example datasets does not represent the real performance on large dataset.
 * The .cpp file also provide gradient checking for verify your code, it is commentted out by defult. It is necessary to set "dropout = 0" in [demo.option](example/demo.option) before you enable the gradient checking.
-
-Note: the example files are just to verify the running for the code. For copyright consideration, we take only hundreds of sentences as example. Hence the results on those example datasets does not represent the real performance on large dataset.
 
 Feature format
 ======
