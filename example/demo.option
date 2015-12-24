@@ -1,4 +1,4 @@
-dropProb = 0.5
+dropProb = 0
 wordHiddenSize = 100
 charhiddenSize = 60
 rnnHiddenSize = 100
@@ -13,6 +13,6 @@ wordEmbSize = 50
 wordEmbFineTune = true
 charEmbFineTune = true
 outBest = OUTdemo
-maxIter = 10
+maxIter = 1
 atomLayers = 3
 seg = true

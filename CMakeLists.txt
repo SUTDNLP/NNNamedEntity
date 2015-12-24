@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
-#set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
-#set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
+set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
 
 project(MinervaSegs)
 
@@ -40,6 +40,14 @@ SET( CMAKE_SHARED_LINKER_FLAGS  "-lm -lopenblas")
 #LINK_DIRECTORIES($(USE_CUDA_PATH)/lib64)
 ####endfor cuda
 
+#### for boost
+#find_package(Boost COMPONENTS serialization system REQUIRED)
+
+#include_directories(${Boost_INCLUDE_DIRS})
+#link_directories(${Boost_LIBRARY_DIRS})
+
+#SET( CMAKE_SHARED_LINKER_FLAGS  "-lm -lboost_serialization")
+#### end boost
 
 
 #add_subdirectory(basic)
@@ -82,7 +90,13 @@ add_executable(SparseGRNNCRFMLLabeler SparseGRNNCRFMLLabeler.cpp)
 add_executable(SparseLSTMLabeler SparseLSTMLabeler.cpp)
 add_executable(SparseLSTMCRFMLLabeler SparseLSTMCRFMLLabeler.cpp)
 add_executable(SparseLSTMCRFMMLabeler SparseLSTMCRFMMLabeler.cpp)
-
+add_executable(LayerLSTMCRFMLLabeler LayerLSTMCRFMLLabeler.cpp)
+add_executable(DLSTMCRFMLLabeler DLSTMCRFMLLabeler.cpp)
+add_executable(FELSTMCRFMLLabeler FELSTMCRFMLLabeler.cpp)
+add_executable(CDLSTMCRFMLLabeler CDLSTMCRFMLLabeler.cpp)
+add_executable(CDLSTMLabeler CDLSTMLabeler.cpp)
+add_executable(CDOLSTMLabeler CDOLSTMLabeler.cpp)
+add_executable(DLSTMLabeler DLSTMLabeler.cpp)
 
 target_link_libraries(GatedLabeler openblas)
 target_link_libraries(GatedCRFMMLabeler openblas)
@@ -119,4 +133,10 @@ target_link_libraries(SparseGRNNCRFMLLabeler openblas)
 target_link_libraries(SparseLSTMLabeler openblas)
 target_link_libraries(SparseLSTMCRFMLLabeler openblas)
 target_link_libraries(SparseLSTMCRFMMLabeler openblas)
-
+target_link_libraries(LayerLSTMCRFMLLabeler openblas)
+target_link_libraries(DLSTMCRFMLLabeler openblas)
+target_link_libraries(FELSTMCRFMLLabeler openblas)
+target_link_libraries(CDLSTMCRFMLLabeler openblas)
+target_link_libraries(CDLSTMLabeler openblas)
+target_link_libraries(CDOLSTMLabeler openblas)
+target_link_libraries(DLSTMLabeler openblas)
