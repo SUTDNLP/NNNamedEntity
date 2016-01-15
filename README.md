@@ -60,3 +60,4 @@ Updating...
 ====
 * 2015-12-02: support model saving and loading.
 * 2015-12-11: fix test() output file bug. Previous version's output is golden test file, this version sets the output to be the predicted file.
+* 2016-01-15: fix init() with setwordembeddingfinetune bug.
