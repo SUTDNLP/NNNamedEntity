@@ -458,8 +458,8 @@ void Labeler::train(const string& trainFile, const string& devFile,
     tagEmbs[idx].randu(1002 + idx);
   }
 
-	m_classifier.setWordEmbFinetune(m_options.wordEmbFineTune);
 	m_classifier.init(wordEmb, m_options.wordcontext, charEmb, m_options.charcontext, tagEmbs, m_labelAlphabet.size(), m_options.charhiddenSize, m_options.atomLayers);
+  m_classifier.setWordEmbFinetune(m_options.wordEmbFineTune);  
   m_classifier.setTagEmbFinetune(m_options.tagEmbFineTune);
   m_classifier.setDropValue(m_options.dropProb);
 
