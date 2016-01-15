@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
-#set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
-#set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
+set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
 
 project(MinervaSegs)
 
@@ -40,6 +40,14 @@ SET( CMAKE_SHARED_LINKER_FLAGS  "-lm -lopenblas")
 #LINK_DIRECTORIES($(USE_CUDA_PATH)/lib64)
 ####endfor cuda
 
+#### for boost
+#find_package(Boost COMPONENTS serialization system REQUIRED)
+
+#include_directories(${Boost_INCLUDE_DIRS})
+#link_directories(${Boost_LIBRARY_DIRS})
+
+#SET( CMAKE_SHARED_LINKER_FLAGS  "-lm -lboost_serialization")
+#### end boost
 
 
 #add_subdirectory(basic)
