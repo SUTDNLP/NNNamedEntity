@@ -6,11 +6,6 @@ Demo system
 ======
 * Download the [LibN3L](https://github.com/SUTDNLP/LibN3L) library and configure your system. Please refer to [Here](https://github.com/SUTDNLP/LibN3L)
 * Open [CMakeLists.txt](CMakeLists.txt) and change " ../LibN3L/" into the directory of your [LibN3L](https://github.com/SUTDNLP/LibN3L) package.
-* If you do not use Mac OS, please comment out two lines in CMakeList.txt: 
-
-  `set(CMAKE_C_COMPILIER /usr/local/bin/gcc)`
-
-  `set(CMAKE_CXX_COMPILER /usr/local/bin/g++)`
 * Run the [demo-entity.sh](demo-entity.sh) file: `sh demo-entity.sh`
 
 The demo system includes English name entity recognition sample data(["Entity.train"](example/Entity.train), ["Entity.dev"](example/Entity.dev) and ["Entity.test"](example/Entity.test), English word embeding sample file(["sena.emb"](example/sena.emb) and parameter setting file(["demo.option"](example/demo.option). All of these files are gathered at folder [NNNamedEntity/example](example).
@@ -62,7 +57,10 @@ you the performance of the test set.
 
 Updating...
 ====
-* 2015-12-02: support model saving and loading.
-* 2015-12-11: fix test() output file bug. Previous version's output is golden test file, this version sets the output to be the predicted file.
+* 2017-01-02: update CMAkeList, no need to comment out compilier manually when switch between MacOS and Linux.
 * 2016-01-15: fix init() with setwordembeddingfinetune bug.
+* 2015-12-11: fix test() output file bug. Previous version's output is golden test file, this version sets the output to be the predicted file.
+* 2015-12-02: support model saving and loading.
+
+
 

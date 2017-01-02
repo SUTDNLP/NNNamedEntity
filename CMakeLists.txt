@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
-set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
-set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
+IF(APPLE)
+	set(CMAKE_C_COMPILIER /usr/local/bin/gcc)
+	set(CMAKE_CXX_COMPILER /usr/local/bin/g++)
+ENDIF()
 
 project(MinervaSegs)
 
